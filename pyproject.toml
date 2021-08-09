@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "mint-strategy-server"
+version = "0.1.0"
+description = ""
+authors = ["Raphael Krupinski <rafalkrupinski@users.noreply.github.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+sanic = "^21.6.2"
+requests = "^2.26.0"
+Sanic-Cors = "^1.0.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
