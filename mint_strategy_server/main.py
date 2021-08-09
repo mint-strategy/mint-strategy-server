@@ -10,14 +10,34 @@ from mint_strategy_server import downloader
 app = Sanic(name='default')
 CORS(app)
 
+copy_headers = [
+    'accept',
+    'accept-encoding',
+    'accept-language',
+    'user-agent',
+]
+
+static_headers = {
+    'Referer': 'https://www.mintos.com/webapp/en/invest-en/primary-market/?sort_field=interest&sort_order=DESC'
+               + '&currencies%5B%5D=978&referrer=https%3A%2F%2Fwww.mintos.com&hash=',
+    'Sec-Fetch-Dest': 'document',
+    'Sec-Fetch-Mode': 'navigate',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-User': '?1',
+    'Connection': 'Close',
+}
+
 
 @app.post('/download')
 @cross_origin(app, methods=['POST'])
 async def download(request: sanic.Request) -> sanic.HTTPResponse:
-    pprint.pprint(request.headers)
     cookies = request.json
     pprint.pprint(cookies)
-    downloader.download(cookies)
+
+    headers = {**static_headers, **{k: v for k, v in request.headers.items() if k in copy_headers}}
+    pprint.pprint(headers)
+
+    await downloader.download(cookies, headers)
     return sanic.text('')
 
 
