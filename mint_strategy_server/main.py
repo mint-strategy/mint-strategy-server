@@ -15,9 +15,9 @@ CORS(app)
 @cross_origin(app, methods=['POST'])
 async def download(request: sanic.Request) -> sanic.HTTPResponse:
     pprint.pprint(request.headers)
-    sessionId = str(request.body, 'UTF-8')
-    pprint.pprint(sessionId)
-    downloader.download(sessionId)
+    cookies = request.json
+    pprint.pprint(cookies)
+    downloader.download(cookies)
     return sanic.text('')
 
 
