@@ -1,4 +1,4 @@
-from mint_strategy_server import __version__
+from mint_strategy.server import __version__
 
 
 def test_version():
