@@ -1,29 +1,31 @@
 import logging.config
 
 import aiohttp
+import mint_strategy.loan_book as lb
 import sanic
 import sanic.log
-from mint_strategy.loan_book import Downloader
-from sanic import Sanic
-from sanic_cors import cross_origin, CORS
+import sanic_cors
 
-logging.basicConfig(level=logging.DEBUG)
+import mint_strategy.server.session as s
 
 log_config = sanic.log.LOGGING_CONFIG_DEFAULTS
 log_config['loggers'].update({
-    "mint_strategy": {"level": "DEBUG", "handlers": ["console"]},
+    "mint_strategy": {
+        "level": "DEBUG",
+        "handlers": ["console"]
+    },
 })
 
 logging.config.dictConfig(log_config)
 
 log = logging.getLogger('mint-strategy.server')
 
-app = Sanic('default', configure_logging=False)
-CORS(app)
+app = sanic.Sanic('default', configure_logging=False)
+sanic_cors.CORS(app)
 
 
 @app.post('/download')
-@cross_origin(app, methods=['POST'])
+@sanic_cors.cross_origin(app, methods=['POST'])
 async def download(request: sanic.Request) -> sanic.HTTPResponse:
     await app.ctx.downloader.download(request.json, request.headers)
     return sanic.response.empty()
@@ -33,7 +35,10 @@ async def download(request: sanic.Request) -> sanic.HTTPResponse:
 async def setup_downloader(app, _) -> None:
     client_session = aiohttp.ClientSession()
     app.ctx.client_session = client_session
-    app.ctx.downloader = Downloader(client_session)
+    app.ctx.downloader = lb.Downloader(
+        client_session,
+        s.session_factory
+    )
     log.debug('Client Session ready')
 
 

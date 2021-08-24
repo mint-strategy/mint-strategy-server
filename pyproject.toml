@@ -5,15 +5,15 @@ description = ""
 authors = ["Raphael Krupinski"]
 
 [tool.poetry.dependencies]
+aiohttp = { extras = ["speedups"], version = "^3.7.4" }
 python = "^3.9"
 sanic = "^21.6.2"
 Sanic-Cors = "^1.0.0"
-aiohttp = { extras = ["speedups"], version = "^3.7.4" }
-mint-loan-book = { path = "../mint-loan-book", develop = true }
+mint-loan-book = {path = "../mint-loan-book", develop = true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
