@@ -5,15 +5,16 @@ description = ""
 authors = ["Raphael Krupinski"]
 
 [tool.poetry.dependencies]
-aiohttp = { extras = ["speedups"], version = "^3.7.4" }
+appdirs = "^1.4.4"
 python = "^3.9"
-sanic = "^21.6.2"
-Sanic-Cors = "^1.0.0"
-mint-loan-book = {path = "../mint-loan-book", develop = true}
+fastapi = "^0.70.1"
+uvicorn = {extras = ["standard"], version = "^0.16.0"}
+aiohttp = {extras = ["speedups"], version = "^3.8.1"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+black = {version = "^21.12b0", allow-prereleases = true}
 
 [build-system]
-requires = ["poetry-core"]
+requires = [ "poetry_core"]
 build-backend = "poetry.core.masonry.api"
