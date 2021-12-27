@@ -1,4 +1,5 @@
 import logging
+import logging.config
 import pathlib
 
 import appdirs
@@ -10,7 +11,7 @@ from .session import session_factory
 
 log_config = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler'

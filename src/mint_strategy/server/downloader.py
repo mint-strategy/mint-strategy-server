@@ -21,7 +21,7 @@ static_headers = {
     "Accept-Language": "en-US,en;q=0.5",
     "Accept-Encoding": "gzip, deflate, br",
     "Referer": "https://www.mintos.com/webapp/en/invest-en/primary-market/?sort_field=interest&sort_order=DESC"
-    + "&currencies%5B%5D=978&referrer=https%3A%2F%2Fwww.mintos.com&hash=",
+               + "&currencies%5B%5D=978&referrer=https%3A%2F%2Fwww.mintos.com&hash=",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "document",
     "Sec-Fetch-Mode": "navigate",
@@ -32,11 +32,10 @@ static_headers = {
 
 
 async def download(
-    cookies: typing.Mapping[str, str],
-    headers: typing.Mapping[str, str],
-    target_file: pathlib.Path,
+        cookies: typing.Mapping[str, str],
+        headers: typing.Mapping[str, str],
+        target_file: pathlib.Path,
 ) -> None:
-
     headers = static_headers | {k: v for k, v in headers.items() if k in allow_override}
 
     client_session = aiohttp.ClientSession()
@@ -46,6 +45,7 @@ async def download(
         headers=headers,
         timeout=aiohttp.ClientTimeout(total=60 * 60, sock_read=5 * 60),
     )
+
     async def download_coro():
         log.info("Downloading to %s", target_file)
         with open(target_file, "wb") as fd:
@@ -54,16 +54,21 @@ async def download(
                 if not chunk:
                     break
                 fd.write(chunk)
-        await response.close()
+        response.close()
         await client_session.close()
+
+        from mint_strategy.telegraf.excel_zip_loader import load_zip
+        load_zip(target_file)
 
     loop = asyncio.get_event_loop()
     task = loop.create_task(download_coro())
-    def result_handler(future:Future):
+
+    def result_handler(future: Future):
         exc = future.exception()
         if exc:
-            logging.warn(exc_info=exc)
+            logging.warning('Error downloading file', exc_info=exc)
             raise exc
         else:
             logging.info('download done')
+
     task.add_done_callback(result_handler)
