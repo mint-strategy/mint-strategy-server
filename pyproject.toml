@@ -3,6 +3,11 @@ name = "mint-strategy-server"
 version = "0.1.0"
 description = ""
 authors = ["Raphael Krupinski"]
+packages = [
+    { include = "mint_strategy", from = "src" },
+]
+[tool.poetry.scripts]
+mint-server = 'mint_strategy.server:main'
 
 [tool.poetry.dependencies]
 appdirs = "^1.4.4"
@@ -17,5 +22,5 @@ pytest = "^5.2"
 black = {version = "^21.12b0", allow-prereleases = true}
 
 [build-system]
-requires = [ "poetry_core"]
+requires = ["poetry-core @ git+https://github.com/python-poetry/poetry-core.git@master"]
 build-backend = "poetry.core.masonry.api"

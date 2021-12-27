@@ -1,6 +1,6 @@
 import pathlib
 
-if __name__ == "__main__":
+def main():
     import sys
 
     if len(sys.argv) == 2:
@@ -12,3 +12,6 @@ if __name__ == "__main__":
         import uvicorn
 
         uvicorn.run(app)
+
+if __name__ == "__main__":
+    main()
