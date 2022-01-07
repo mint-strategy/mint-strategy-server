@@ -16,6 +16,7 @@ fastapi = "^0.70.1"
 uvicorn = {extras = ["standard"], version = "^0.16.0"}
 aiohttp = {extras = ["speedups"], version = "^3.8.1"}
 openpyxl = "^3.0.9"
+pytz = "^2021.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
