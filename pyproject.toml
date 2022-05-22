@@ -3,6 +3,7 @@ name = "mint-strategy-server"
 version = "0.1.0"
 description = ""
 authors = ["Raphael Krupinski"]
+packages=[{ include = 'mint_strategy', from = 'src' }]
 
 [tool.poetry.dependencies]
 appdirs = "^1.4.4"

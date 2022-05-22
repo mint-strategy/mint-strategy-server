@@ -1,4 +1,4 @@
-import logging
+import logging.config
 import pathlib
 
 import appdirs
@@ -22,7 +22,8 @@ log_config = {
 }
 
 logging.config.dictConfig(log_config)
-logging.info('logging configured')
+log = logging.getLogger(__name__)
+log.info('logging configured')
 
 app = FastAPI()
 
@@ -35,12 +36,17 @@ app.add_middleware(
 )
 
 
+@app.get('/')
+async def hello(request: Request, response: Response):
+    response.status_code = status.HTTP_200_OK
+
+
 @app.post("/loan_book/download")
 async def download(request: Request, response: Response):
     cookies = await request.json()
     target = session_factory(pathlib.Path(appdirs.user_data_dir('mint_strategy'))).zipped
 
     await do_download(cookies, request.headers, target)
-    logging.info(target)
+    log.info(target)
 
     response.status_code = status.HTTP_202_ACCEPTED

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import {MintStack} from '../lib/mint';
+import {MintStack} from "../lib/mint";
 
 const app = new cdk.App();
 new MintStack(app, 'mint', {

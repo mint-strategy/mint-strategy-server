@@ -3,5 +3,9 @@
     "eu-west-1a",
     "eu-west-1b",
     "eu-west-1c"
-  ]
+  ],
+  "hosted-zone:account=432025153586:domainName=oeklo.at:region=eu-west-1": {
+    "Id": "/hostedzone/Z0834525SU6TR1M3O322",
+    "Name": "oeklo.at."
+  }
 }
