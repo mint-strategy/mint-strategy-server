@@ -6,14 +6,14 @@ export interface EksClusterProps extends StackProps {
     vpc: ec2.IVpc;
 }
 
+const rafalArn = 'arn:aws:iam::432025153586:user/rafal';
+
 export class EksCluster {
     build(scope: Construct, id: string, props: EksClusterProps) {
-        const stackID = `${id}-blueprint`
-
         const platformTeam = new xb.PlatformTeam({
             name: 'platformTeam',
             users: [
-                new iam.ArnPrincipal('arn:aws:iam::432025153586:user/rafal'),
+                new iam.ArnPrincipal(rafalArn),
             ]
         });
 
@@ -25,9 +25,15 @@ export class EksCluster {
                 new xb.MetricsServerAddOn,
                 new xb.ContainerInsightsAddOn,
                 new xb.ClusterAutoScalerAddOn,
-                new xb.SecretsStoreAddOn
+                new xb.SecretsStoreAddOn,
+                {
+                    deploy(clusterInfo: xb.ClusterInfo): Promise<Construct> | void {
+                        const user = iam.User.fromUserArn(clusterInfo.cluster.stack, 'rafal', rafalArn);
+                        clusterInfo.cluster.awsAuth.addUserMapping(user, {groups: ['system:masters']})
+                    }
+                },
             )
             .teams(platformTeam)
-            .build(scope, stackID);
+            .build(scope, `${id}-blueprint`);
     }
 }
