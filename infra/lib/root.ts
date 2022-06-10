@@ -1,9 +1,8 @@
 import {Construct} from "constructs";
-import {
-    aws_ec2 as ec2,
-    aws_rds as rds,
-    Stack, StackProps, CfnOutput
-} from "aws-cdk-lib";
+import {aws_ec2 as ec2, Stack, StackProps} from "aws-cdk-lib";
+import {Postgres} from "./postgres";
+import {Bastion} from "./bastion";
+import {Prefect} from "./prefect";
 
 export default class RootStack extends Stack {
     vpc: ec2.IVpc;
@@ -31,20 +30,8 @@ export default class RootStack extends Stack {
         });
         this.vpc = vpc;
 
-        const sgPg = new ec2.SecurityGroup(this, 'sgPg', {vpc});
-        sgPg.addIngressRule(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(5432));
-
-        const db = new rds.DatabaseInstance(this, 'db1', {
-            vpc,
-            engine: rds.DatabaseInstanceEngine.postgres({version: rds.PostgresEngineVersion.VER_14}),
-            instanceType: ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MEDIUM),
-            vpcSubnets: {subnetType: ec2.SubnetType.PRIVATE_ISOLATED},
-            credentials: rds.Credentials.fromUsername('mint'),
-            enablePerformanceInsights: true,
-            securityGroups: [sgPg],
-        });
-        new CfnOutput(this, 'dbUrl', {value: db.instanceEndpoint.hostname});
-        new CfnOutput(this, 'dbSecret', {value: db.secret!.secretName});
-
+        new Postgres(this, 'pgsql', {vpc});
+        new Bastion(this,'bastion',{vpc});
+        new Prefect(this, 'prefect');
     }
 }
