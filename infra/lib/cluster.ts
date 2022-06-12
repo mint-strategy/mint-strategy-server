@@ -19,10 +19,10 @@ class MasterAccountAddOn implements ClusterAddOn {
 
 class ALBControllerTagsAddOn implements ClusterAddOn {
     deploy(clusterInfo: xb.ClusterInfo): Promise<Construct> | void {
-        const vpc: ec2.IVpc | undefined = clusterInfo.getResource(xb.GlobalResources.Vpc);
-        vpc!.isolatedSubnets.forEach(subnet => Tags.of(subnet).add("kubernetes.io/role/internal-elb", '1'));
-        vpc!.privateSubnets.forEach(subnet => Tags.of(subnet).add("kubernetes.io/role/internal-elb", '1'));
-        vpc!.publicSubnets.forEach(subnet => Tags.of(subnet).add("kubernetes.io/role/elb", '1'));
+        const vpc = clusterInfo.getResource(xb.GlobalResources.Vpc) as ec2.IVpc;
+        vpc.isolatedSubnets.forEach(subnet => Tags.of(subnet).add("kubernetes.io/role/internal-elb", '1'));
+        vpc.privateSubnets.forEach(subnet => Tags.of(subnet).add("kubernetes.io/role/internal-elb", '1'));
+        vpc.publicSubnets.forEach(subnet => Tags.of(subnet).add("kubernetes.io/role/elb", '1'));
     }
 }
 
@@ -49,6 +49,6 @@ export class EksCluster {
                 new MasterAccountAddOn,
             )
             .teams(platformTeam)
-            .build(scope, `${id}-blueprint`);
+            .build(scope, id);
     }
 }

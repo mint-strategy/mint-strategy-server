@@ -22,7 +22,7 @@
   "dependencies": {
     "@aws-quickstart/eks-blueprints": "^1.0.0",
     "aws-cdk-lib": "2.21.1",
-    "cdk8s": "^2.2.85",
+    "cdk8s": "^2.3.23",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.16"
   }
